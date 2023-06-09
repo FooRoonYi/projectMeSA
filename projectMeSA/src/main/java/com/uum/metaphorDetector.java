@@ -66,19 +66,31 @@ public class metaphorDetector {
         	System.out.println("\nSemantic Graph:");
         	System.out.println(dependencies);
         	
-            
+        	//take a sentence, breaking down into individual tokens
+        	//collect tokens as a list of strings
+        	List<CoreLabel> words = getWords(sentence);
+        	
             boolean foundMetaphor = findMetaphor(sentence);
-            System.out.println(foundMetaphor);
             
-            if(foundMetaphor) {
-            	printResult(foundMetaphor);
-            	
-            	textFieldViewResult.setText("Metaphor");
-				textFieldViewResult.setBackground(new Color(102, 255, 255));
-	            textFieldMetaphor.setText("100%");
-	 	        textFieldSimile.setText("0%");
-	 		    textFieldAnalogy.setText("0%");
-			}  
+            if (foundMetaphor) {
+ 	       		 printResult(foundMetaphor);
+ 	       		 
+ 	       		 textFieldViewResult.setText("Metaphor");
+ 	           	 textFieldViewResult.setBackground(new Color(102, 255, 255));
+ 			     textFieldMetaphor.setText("100%");
+ 			 	 textFieldSimile.setText("0%");
+ 			 	 textFieldAnalogy.setText("0%");
+ 			 	 
+ 			 	 return true;
+            } else {
+            	textFieldViewResult.setText("Neutral");
+ 		   		textFieldViewResult.setBackground(new Color(255, 255, 51));
+ 		   		textFieldMetaphor.setText("0%");
+ 		   		textFieldSimile.setText("0%");
+ 		   		textFieldAnalogy.setText("0%");
+ 		   		 	
+ 		   		return false;
+            }
         }
         return true;
     }
@@ -247,7 +259,7 @@ public class metaphorDetector {
                 for (SemanticGraphEdge edge : outgoingEdges) {
                 	 String pos2 = edge.getTarget().get(CoreAnnotations.PartOfSpeechAnnotation.class);
                      if (pos2.startsWith("NNS")) {
-                    	 System.out.println("POS2: "+ pos2.toString());
+                    	System.out.println("POS2: "+ pos2.toString());
                      	System.out.println("4");
                          return true;
                      }
@@ -326,11 +338,6 @@ public class metaphorDetector {
              System.out.println("\nThe sentence contains a metaphor.");
            } else {
              System.out.println("\nThe sentence does not contain a metaphor.");
-             textFieldViewResult.setText("Neutral");
-		     textFieldViewResult.setBackground(new Color(255, 255, 51));
-		     textFieldMetaphor.setText("0%");
-		     textFieldSimile.setText("0%");
-		     textFieldAnalogy.setText("0%");
            }
 	}
 }

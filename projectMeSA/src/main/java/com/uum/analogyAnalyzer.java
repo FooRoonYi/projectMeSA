@@ -11,6 +11,7 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
@@ -28,6 +29,10 @@ public class analogyAnalyzer {
 	static JTextField textFieldAnalogy;
 	static JTextField textFieldViewResult;
 	
+	static List<CoreLabel> getWords(CoreMap sentence) {
+        return sentence.get(CoreAnnotations.TokensAnnotation.class);
+	}
+	
 	public analogyAnalyzer(JTextArea aa, JTextField mm, JTextField ss, JTextField al, JTextField rr) {
 		Properties props = new Properties();
 		props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
@@ -37,7 +42,7 @@ public class analogyAnalyzer {
 		this.textFieldSimile = ss;
 		this.textFieldAnalogy = al;
 		this.textFieldViewResult = rr;
-}
+	}
 	
 	public static boolean detectAnalogy(String text) {
 		 	Annotation document = new Annotation(text);
@@ -48,27 +53,33 @@ public class analogyAnalyzer {
 	        for (CoreMap sentence : sentences) {
 	        	//take a sentence, breaking down into individual tokens
 	        	//collect tokens as a list of strings
-	            List<String> words = sentence.get(CoreAnnotations.TokensAnnotation.class)
-	                    .stream()
-	                    .map(token -> token.get(CoreAnnotations.TextAnnotation.class))
-	                    .collect(Collectors.toList());
+	        	List<CoreLabel> words = getWords(sentence);
 	            
 	            boolean foundAnalogy = findAnalogy(sentence);
 	            
 	            if(words.size() > 10) {
 	            	if(foundAnalogy) {
 	            		printResult(foundAnalogy);
-		                textFieldViewResult.setText("Analogy");
-		                textFieldViewResult.setBackground(new Color(102, 255, 255));
-			            textFieldMetaphor.setText("0%");
-			 	        textFieldSimile.setText("0%");
-			 		    textFieldAnalogy.setText("100%");
+	            		
+	            		textFieldViewResult.setText("Analogy");
+	                	textFieldViewResult.setBackground(new Color(102, 255, 255));
+	    			    textFieldMetaphor.setText("0%");
+	    			 	textFieldSimile.setText("0%");
+	    			 	textFieldAnalogy.setText("100%");
+	    			 	 
 		                return true;
-		            } 
-	            	
+		            } else {
+		            	textFieldViewResult.setText("Neutral");
+	   		   		 	textFieldViewResult.setBackground(new Color(255, 255, 51));
+	   		   		 	textFieldMetaphor.setText("0%");
+	   		   		 	textFieldSimile.setText("0%");
+	   		   		 	textFieldAnalogy.setText("0%");
+	   		   		 	
+	   		   		 	return false;
+		            }
 	            }
 	        }
-	        return false;
+	        return true;
 	}
 	
 	static boolean findAnalogy(CoreMap sentence) {
@@ -84,7 +95,6 @@ public class analogyAnalyzer {
     	//then it is an analogy
     	//hence analogy is detected
     	if (foundMetaphor && foundSimile) {
-    		System.out.println("\nThe sentence contains an analogy.");
     		return true;
     	}
     	return false;
@@ -93,13 +103,9 @@ public class analogyAnalyzer {
 	public static void printResult(boolean foundAnalogy) {
 	   	 if (foundAnalogy) {
 	             System.out.println("\nThe sentence contains an analogy.");
-	           } else {
+	     } else {
 	             System.out.println("\nThe sentence does not contain an analogy.");
-	             textFieldViewResult.setText("Neutral");
-	   		     textFieldViewResult.setBackground(new Color(255, 255, 51));
-	   		     textFieldMetaphor.setText("0%");
-	   		     textFieldSimile.setText("0%");
-	   		     textFieldAnalogy.setText("0%");
-	           }
-		}
+	    }
+	}
+	
 }

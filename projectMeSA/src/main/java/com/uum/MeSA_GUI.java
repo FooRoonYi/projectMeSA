@@ -283,9 +283,8 @@ public class MeSA_GUI extends JFrame {
 					metaphorDetector m = new metaphorDetector(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
 					m.detectMetaphor(InputTextField.getText());
 					
-					
 					simileAnalyzer s = new simileAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
-				    s.detectSimile(InputTextField.getText());
+					s.detectSimile(InputTextField.getText());
 			        
 				    analogyAnalyzer a = new analogyAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
 				    a.detectAnalogy(InputTextField.getText());

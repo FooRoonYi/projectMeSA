@@ -81,21 +81,28 @@ public class simileAnalyzer {
             List<CoreLabel> words = getWords(sentence);
             
             boolean foundSimile = findSimile(sentence);
-           
             
             if(words.size() <= 10) {
             	if (foundSimile) {
             		 printResult(foundSimile);
             		 
             		 textFieldViewResult.setText("Simile");
-            		 textFieldViewResult.setBackground(new Color(102, 255, 255));
-			         textFieldMetaphor.setText("0%");
-			 	     textFieldSimile.setText("100%");
-			 		 textFieldAnalogy.setText("0%");
-                } 
-            	
+                	 textFieldViewResult.setBackground(new Color(102, 255, 255));
+    			     textFieldMetaphor.setText("0%");
+    			 	 textFieldSimile.setText("100%");
+    			 	 textFieldAnalogy.setText("0%");
+    			 	 
+    			 	return true;
+                } else {
+                	textFieldViewResult.setText("Neutral");
+   		   		 	textFieldViewResult.setBackground(new Color(255, 255, 51));
+   		   		 	textFieldMetaphor.setText("0%");
+   		   		 	textFieldSimile.setText("0%");
+   		   		 	textFieldAnalogy.setText("0%");
+   		   		 	
+   		   		 	return false;
+                }
             }
-            
         }
         return true;
     }
@@ -174,15 +181,10 @@ public class simileAnalyzer {
     }
 	
 	public static void printResult(boolean foundSimile) {
-   	 if (foundSimile) {
-             System.out.println("\nThe sentence contains a simile.");
-           } else {
-             System.out.println("\nThe sentence does not contain a simile.");
-             textFieldViewResult.setText("Neutral");
-		     textFieldViewResult.setBackground(new Color(255, 255, 51));
-		     textFieldMetaphor.setText("0%");
-		     textFieldSimile.setText("0%");
-		     textFieldAnalogy.setText("0%");
-           }
+	   	 if (foundSimile) {
+	             System.out.println("\nThe sentence contains a simile.");
+	     } else {
+	             System.out.println("\nThe sentence does not contain a simile.");
+	     }
 	}
 }
