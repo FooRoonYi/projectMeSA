@@ -64,16 +64,24 @@ public class analogyAnalyzer {
 	            		textFieldViewResult.setText("Analogy");
 	                	textFieldViewResult.setBackground(new Color(102, 255, 255));
 	    			    textFieldMetaphor.setText("0%");
+	    			    textFieldMetaphor.setBackground(Color.WHITE);
+	    			    
 	    			 	textFieldSimile.setText("0%");
+	    			 	textFieldMetaphor.setBackground(Color.WHITE);
+	    			 	
 	    			 	textFieldAnalogy.setText("100%");
+	    			 	textFieldAnalogy.setBackground(Color.GREEN);
 	    			 	 
 		                return true;
 		            } else {
 		            	textFieldViewResult.setText("Neutral");
 	   		   		 	textFieldViewResult.setBackground(new Color(255, 255, 51));
 	   		   		 	textFieldMetaphor.setText("0%");
+	   		   		 	textFieldMetaphor.setBackground(Color.WHITE);
 	   		   		 	textFieldSimile.setText("0%");
+	   		   		 	textFieldSimile.setBackground(Color.WHITE);
 	   		   		 	textFieldAnalogy.setText("0%");
+	   		   		 	textFieldAnalogy.setBackground(Color.WHITE);
 	   		   		 	
 	   		   		 	return false;
 		            }
@@ -84,7 +92,7 @@ public class analogyAnalyzer {
 	
 	static boolean findAnalogy(CoreMap sentence) {
 		//contain metaphor characteristics
-		metaphorDetector metaphor = new metaphorDetector(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
+		metaphorAnalyzer metaphor = new metaphorAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
     	boolean foundMetaphor = metaphor.findMetaphor(sentence);
     	
     	//contain simile characteristics

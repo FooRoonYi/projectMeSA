@@ -88,17 +88,26 @@ public class simileAnalyzer {
             		 
             		 textFieldViewResult.setText("Simile");
                 	 textFieldViewResult.setBackground(new Color(102, 255, 255));
+                	 
     			     textFieldMetaphor.setText("0%");
+    			     textFieldMetaphor.setBackground(Color.WHITE);
+    			     
     			 	 textFieldSimile.setText("100%");
+    			 	 textFieldSimile.setBackground(Color.GREEN);
+    			 	 
     			 	 textFieldAnalogy.setText("0%");
+    			 	 textFieldMetaphor.setBackground(Color.WHITE);
     			 	 
     			 	return true;
                 } else {
                 	textFieldViewResult.setText("Neutral");
    		   		 	textFieldViewResult.setBackground(new Color(255, 255, 51));
    		   		 	textFieldMetaphor.setText("0%");
+   		   		 	textFieldMetaphor.setBackground(Color.WHITE);
    		   		 	textFieldSimile.setText("0%");
+   		   		 	textFieldSimile.setBackground(Color.WHITE);
    		   		 	textFieldAnalogy.setText("0%");
+   		   		 	textFieldAnalogy.setBackground(Color.WHITE);
    		   		 	
    		   		 	return false;
                 }

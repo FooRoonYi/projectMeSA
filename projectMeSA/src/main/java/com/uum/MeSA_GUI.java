@@ -235,9 +235,16 @@ public class MeSA_GUI extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				InputTextField.setText("");
+				
 				textFieldMetaphor.setText("");
+				textFieldMetaphor.setBackground(Color.WHITE);
+				
 				textFieldSimile.setText("");
+				textFieldSimile.setBackground(Color.WHITE);
+				
 				textFieldAnalogy.setText("");
+				textFieldAnalogy.setBackground(Color.WHITE);
+				
 				textFieldViewResult.setText("");
 				textFieldViewResult.setBackground(new Color(247, 164, 164));
 				textArea.setText(" ");
@@ -280,7 +287,7 @@ public class MeSA_GUI extends JFrame {
 				}
 				else {
 					
-					metaphorDetector m = new metaphorDetector(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
+					metaphorAnalyzer m = new metaphorAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
 					m.detectMetaphor(InputTextField.getText());
 					
 					simileAnalyzer s = new simileAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
