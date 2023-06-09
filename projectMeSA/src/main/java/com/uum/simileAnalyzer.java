@@ -3,12 +3,17 @@ package com.uum;
 import java.util.Properties;
 
 import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.ling.IndexedWord;
 import edu.stanford.nlp.pipeline.Annotation;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
+import edu.stanford.nlp.semgraph.SemanticGraphEdge;
+import edu.stanford.nlp.trees.TypedDependency;
 import edu.stanford.nlp.util.CoreMap;
 
+import java.awt.Color;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -32,11 +37,8 @@ public class simileAnalyzer {
 	static JTextField textFieldAnalogy;
 	static JTextField textFieldViewResult;
 	
-	static List<String> getWords(CoreMap sentence) {
-	        return sentence.get(CoreAnnotations.TokensAnnotation.class)
-	                .stream()
-	                .map(token -> token.get(CoreAnnotations.TextAnnotation.class))
-	                .collect(Collectors.toList());
+	static List<CoreLabel> getWords(CoreMap sentence) {
+	        return sentence.get(CoreAnnotations.TokensAnnotation.class);
     }
 	
 	public simileAnalyzer(JTextArea aa, JTextField mm, JTextField ss, JTextField al, JTextField rr) {
@@ -76,20 +78,24 @@ public class simileAnalyzer {
         	
         	//take a sentence, breaking down into individual tokens
         	//collect tokens as a list of strings
-            List<String> words = getWords(sentence);
+            List<CoreLabel> words = getWords(sentence);
             
             boolean foundSimile = findSimile(sentence);
-            printResult(foundSimile);
+           
             
-            if(words.size() < 10) {
+            if(words.size() <= 10) {
             	if (foundSimile) {
-                    String simile = sentence.toString();
-                    System.out.println("Simile detected: " + simile);
-                    textArea.append("\n\nThe simile detected in this sentence is: \n" + simile);
-                    
-                    detectSimileAccuracy(text);
-                }
+            		 printResult(foundSimile);
+            		 
+            		 textFieldViewResult.setText("Simile");
+            		 textFieldViewResult.setBackground(new Color(102, 255, 255));
+			         textFieldMetaphor.setText("0%");
+			 	     textFieldSimile.setText("100%");
+			 		 textFieldAnalogy.setText("0%");
+                } 
+            	
             }
+            
         }
         return true;
     }
@@ -100,17 +106,68 @@ public class simileAnalyzer {
         
     	//take a sentence, breaking down into individual tokens
     	//collect tokens as a list of strings
-    	List<String> words = getWords(sentence);
+    	List<CoreLabel> words = getWords(sentence);
     	
-       //loops through a list of words
+    	//loops through a list of words
         for (int i = 0; i < words.size(); i++) {
-            String currentWord = words.get(i);
-            //to detect simile by finding the words "like" or "as"
-            if (currentWord.equalsIgnoreCase("like") || currentWord.equalsIgnoreCase("as")) {
-            	String keyword = words.get(i - 1) + " " + currentWord + " " + words.get(i + 1);
-                System.out.println("Keyword detected: " + keyword);
-                textArea.append("\nKeyword detected: " + keyword +"\n\n");
-                return true;
+            CoreLabel currentWord = words.get(i);
+            String token = currentWord.get(CoreAnnotations.TextAnnotation.class);
+            
+            // Check for simile patterns
+            if (token.equalsIgnoreCase("like") || token.equalsIgnoreCase("as")) {
+            	textArea.append("\nKeyword detected: " + token +"\n\n");
+            	
+            	if (i > 0 && i < words.size() - 1) {
+                    CoreLabel prevToken = words.get(i - 1);
+                    CoreLabel nextToken = words.get(i + 1);
+                    String prevPos = prevToken.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+                    String nextPos = nextToken.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+                    
+                    System.out.println("Previous Token: " + prevPos);
+                    System.out.println("Next Token: " + nextPos);
+                    
+                    // Verify if adjacent words are adjectives
+                    if ((prevPos.startsWith("JJ") && nextPos.startsWith("JJ")) ||
+                    		(prevPos.startsWith("JJ") && nextPos.startsWith("NN")) ||
+                    		(prevPos.startsWith("VBZ") && nextPos.startsWith("NNS")) ||
+                    		(prevPos.startsWith("VBZ") && nextPos.startsWith("JJ")) ||
+                    		(prevPos.startsWith("VBD") && nextPos.startsWith("JJ")) ||
+                    		(prevPos.startsWith("VBD") && nextPos.startsWith("NNS")) ||
+                    		(prevPos.startsWith("VBN") && nextPos.startsWith("NNS")) ||
+                    		(prevPos.startsWith("VBN") && nextPos.startsWith("DT")) ||
+                    		(prevPos.startsWith("VBD") && nextPos.startsWith("RB")) ||
+                    		(prevPos.startsWith("VBD") && nextPos.startsWith("NN")) ||
+                    		(prevPos.startsWith("VBD") && nextPos.startsWith("VBG")) ||
+                    		(prevPos.startsWith("VBG") && nextPos.startsWith("DT")) ||
+                    		((prevPos.startsWith("VBD") || prevPos.startsWith("VBP") || prevPos.startsWith("VBZ") || prevPos.startsWith("VBG"))  && nextPos.startsWith("DT")) ||
+                    		(prevPos.startsWith("NN") && nextPos.startsWith("NN")) ||
+                    		(prevPos.startsWith("NNS") && nextPos.startsWith("DT")) ||
+                    		(prevPos.startsWith("NN") && nextPos.startsWith("DT")) ||
+                    		(prevPos.startsWith("POS") && nextPos.startsWith("JJ"))) {
+                         
+                    	// Check if "like" or "as" is preceded by a noun or pronoun
+                        if (i > 1) {
+                            CoreLabel prevPrevToken = words.get(i - 2);
+                            String prevPrevPos = prevPrevToken.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+                            System.out.println("Previous prev Token: " + prevPrevPos);
+                            
+                            if (prevPrevPos.startsWith("NN") || prevPrevPos.startsWith("PRP") || prevPrevPos.startsWith("VBD") 
+                            		|| prevPrevPos.startsWith("VBP") || prevPrevPos.startsWith("JJ") || prevPrevPos.startsWith("RB")) {
+                                return true; // Simile detected
+                            }
+                        }
+                    } else {
+                        // Check if "like" or "as" is followed by a noun or pronoun
+                        if (i < words.size() - 2) {
+                            CoreLabel nextNextToken = words.get(i + 2);
+                            String nextNextPos = nextNextToken.get(CoreAnnotations.PartOfSpeechAnnotation.class);
+                            System.out.println("Next next Token: " + nextNextPos);
+                            if (nextNextPos.startsWith("NN") || nextNextPos.startsWith("PRP") || nextNextPos.startsWith("NNS")  || nextNextPos.startsWith("IN") ) {
+                                return true; // Simile detected
+                            }
+                        }
+                    }
+                }
             }
         }
         return false;
@@ -119,47 +176,13 @@ public class simileAnalyzer {
 	public static void printResult(boolean foundSimile) {
    	 if (foundSimile) {
              System.out.println("\nThe sentence contains a simile.");
-             textFieldViewResult.setText("Simile");
            } else {
              System.out.println("\nThe sentence does not contain a simile.");
+             textFieldViewResult.setText("Neutral");
+		     textFieldViewResult.setBackground(new Color(255, 255, 51));
+		     textFieldMetaphor.setText("0%");
+		     textFieldSimile.setText("0%");
+		     textFieldAnalogy.setText("0%");
            }
 	}
-	
-	//detect simile for calculating the accuracy
-	public static double detectSimileAccuracy(String text) {
-	        Annotation document = new Annotation(text);
-	        pipeline.annotate(document);
-	        List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
-	
-	        for (CoreMap sentence : sentences) {
-		            boolean detectedSimile = false;
-		            boolean expectedSimile = false;
-		            // Update the evaluation metrics
-		            if (detectedSimile) {
-			                if (expectedSimile) {
-			                    numTruePositives++;
-			                } else {
-			                    numFalsePositives++;
-			                }
-		            } else {
-			                if (expectedSimile) {
-			                    numFalseNegatives++;
-			                } else {
-			                    numTrueNegatives++;
-			                }
-		           }
-	        }
-        
-	        // Calculate accuracy
-	        double accuracy = ((double) (numTruePositives + numTrueNegatives) /
-	                          (numTruePositives + numFalsePositives + numTrueNegatives + numFalseNegatives)) * 100;
-	        System.out.println("\nSimile detection accuracy: " + accuracy);
-	        
-	        NumberFormat nm = NumberFormat.getNumberInstance();
-	        textFieldMetaphor.setText("0%");
-	        textFieldSimile.setText(nm.format(accuracy) + "%");
-			textFieldAnalogy.setText("0%");
-	        
-	        return accuracy;
-    }
 }

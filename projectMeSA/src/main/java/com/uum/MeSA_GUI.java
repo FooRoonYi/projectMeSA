@@ -239,6 +239,7 @@ public class MeSA_GUI extends JFrame {
 				textFieldSimile.setText("");
 				textFieldAnalogy.setText("");
 				textFieldViewResult.setText("");
+				textFieldViewResult.setBackground(new Color(247, 164, 164));
 				textArea.setText(" ");
 			}
 		});
@@ -273,58 +274,21 @@ public class MeSA_GUI extends JFrame {
 		btnCheck.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				boolean input = false;
 				
 				if(InputTextField.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "It cannot be null! Please enter a sentence before searching.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-			
-					metaphorAnalyzer m = new metaphorAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
-					boolean hasMetaphor = m.detectMetaphor(InputTextField.getText());
-			        
-					if(hasMetaphor) {
-//						textFieldViewResult.setText("Metaphor");
-						
-//						double calcMetaphorAccuracy = m.detectMetaphorAccuracy(InputTextField.getText());
-//						NumberFormat nm = NumberFormat.getNumberInstance();
-//						textFieldMetaphor.setText(nm.format(calcMetaphorAccuracy) + "%");
-//						textFieldSimile.setText("0%");
-//						textFieldAnalogy.setText("0%");
-						
-//						String metaphor = new Boolean(m.findMetaphor(sentence)).toString();
-//						textArea.setText(metaphor);
-					}
+					
+					metaphorDetector m = new metaphorDetector(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
+					m.detectMetaphor(InputTextField.getText());
+					
 					
 					simileAnalyzer s = new simileAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
-				    boolean hasSimile = s.detectSimile(InputTextField.getText());
-				    if(hasSimile) {
-						//textFieldViewResult.setText("Simile");
-						
-//						double calcSimileAccuracy = s.detectSimileAccuracy(InputTextField.getText());
-//						NumberFormat nm = NumberFormat.getNumberInstance();
-//						textFieldMetaphor.setText("0%");
-//						textFieldSimile.setText(nm.format(calcSimileAccuracy) + "%");
-//						textFieldAnalogy.setText("0%");
-						
-//						String simile = new Boolean(s.containsSimile(sentence)).toString();
-//						textArea.setText(simile);
-					}
+				    s.detectSimile(InputTextField.getText());
 			        
-				    analogyAnalyzer a = new analogyAnalyzer(textArea);
-				    boolean hasAnalogy = a.detectAnalogy(InputTextField.getText());
-				    if(hasAnalogy) {
-						textFieldViewResult.setText("Analogy");
-						
-						double calcAnalogyAccuracy = a.calcAccuracy(InputTextField.getText());
-						NumberFormat nm = NumberFormat.getNumberInstance();
-						textFieldMetaphor.setText("0%");
-						textFieldSimile.setText("0%");
-						textFieldAnalogy.setText(nm.format(calcAnalogyAccuracy) + "%");
-						
-//						String analogy = new Boolean(a.containsAnalogy(sentence)).toString();
-//						textArea.setText(analogy);
-					}
+				    analogyAnalyzer a = new analogyAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
+				    a.detectAnalogy(InputTextField.getText());
 				}		
 			}	
 		});
