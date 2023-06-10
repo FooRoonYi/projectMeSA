@@ -83,30 +83,27 @@ public class MeSA_GUI extends JFrame {
 		contentPane.add(panel_3);
 		panel_3.setLayout(null);
 		
-		JPanel panel_10 = new JPanel();
-		panel_10.setBackground(new Color(255, 240, 245));
-		panel_10.setBorder(null);
-		panel_10.setBounds(10, 10, 612, 227);
-		panel_3.add(panel_10);
-		panel_10.setLayout(null);
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 10, 612, 227);
+		panel_3.add(scrollPane_1);
 		
 		JTextArea textArea = new JTextArea();
-		textArea.setEditable(false);
-		textArea.setBounds(10, 10, 568, 182);
-		panel_10.add(textArea);
-		textArea.setBackground(new Color(255, 240, 245));
 		textArea.setFont(new Font("Times New Roman", Font.BOLD, 16));
+		textArea.setEditable(false);
+		textArea.setBackground(new Color(255, 240, 245));
+		scrollPane_1.setViewportView(textArea);
 		
-		JLabel lblsentenceExamples = new JLabel("\"Keywords detected:");
+		JLabel lblsentenceExamples = new JLabel("\"Something that you may want to know:");
 		lblsentenceExamples.setFont(new Font("Times New Roman", Font.BOLD, 22));
-		lblsentenceExamples.setBounds(72, 423, 300, 41);
+		lblsentenceExamples.setBounds(72, 423, 397, 41);
 		contentPane.add(lblsentenceExamples);
 		
 		textFieldViewResult = new JTextField();
+		textFieldViewResult.setForeground(SystemColor.textHighlightText);
 		textFieldViewResult.setBounds(189, 349, 133, 41);
 		contentPane.add(textFieldViewResult);
 		textFieldViewResult.setEditable(false);
-		textFieldViewResult.setFont(new Font("Times New Roman", Font.PLAIN, 22));
+		textFieldViewResult.setFont(new Font("Times New Roman", Font.BOLD, 22));
 		textFieldViewResult.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldViewResult.setBackground(new Color(247, 164, 164));
 		textFieldViewResult.setColumns(10);
@@ -150,9 +147,10 @@ public class MeSA_GUI extends JFrame {
 		panel_7.setLayout(null);
 		
 		textFieldMetaphor = new JTextField();
+		textFieldMetaphor.setForeground(Color.WHITE);
 		textFieldMetaphor.setBackground(Color.WHITE);
 		textFieldMetaphor.setEditable(false);
-		textFieldMetaphor.setFont(new Font("Times New Roman", Font.PLAIN, 24));
+		textFieldMetaphor.setFont(new Font("Times New Roman", Font.BOLD, 24));
 		textFieldMetaphor.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldMetaphor.setBounds(10, 10, 271, 31);
 		panel_7.add(textFieldMetaphor);
@@ -173,8 +171,9 @@ public class MeSA_GUI extends JFrame {
 		panel_8.setLayout(null);
 		
 		textFieldSimile = new JTextField();
+		textFieldSimile.setForeground(Color.WHITE);
 		textFieldSimile.setHorizontalAlignment(SwingConstants.CENTER);
-		textFieldSimile.setFont(new Font("Times New Roman", Font.PLAIN, 24));
+		textFieldSimile.setFont(new Font("Times New Roman", Font.BOLD, 24));
 		textFieldSimile.setBackground(Color.WHITE);
 		textFieldSimile.setEditable(false);
 		textFieldSimile.setBounds(10, 10, 260, 30);
@@ -203,9 +202,10 @@ public class MeSA_GUI extends JFrame {
 		panel_9.setLayout(null);
 		
 		textFieldAnalogy = new JTextField();
+		textFieldAnalogy.setForeground(Color.WHITE);
 		textFieldAnalogy.setHorizontalAlignment(SwingConstants.CENTER);
 		textFieldAnalogy.setBackground(Color.WHITE);
-		textFieldAnalogy.setFont(new Font("Times New Roman", Font.PLAIN, 24));
+		textFieldAnalogy.setFont(new Font("Times New Roman", Font.BOLD, 24));
 		textFieldAnalogy.setEditable(false);
 		textFieldAnalogy.setBounds(10, 10, 266, 30);
 		panel_9.add(textFieldAnalogy);
@@ -230,6 +230,18 @@ public class MeSA_GUI extends JFrame {
 		panel_1.add(InputTextField);
 		InputTextField.setColumns(10);
 		
+		JLabel lblSuccess = new JLabel("");
+		lblSuccess.setIcon(new ImageIcon(MeSA_GUI.class.getResource("/com/uum/icon.png")));
+		lblSuccess.setBounds(341, 327, 95, 93);
+		lblSuccess.setVisible(false);
+		contentPane.add(lblSuccess);
+		
+		JLabel lblNeutral = new JLabel("");
+		lblNeutral.setIcon(new ImageIcon(MeSA_GUI.class.getResource("/com/uum/neutral.png")));
+		lblNeutral.setBounds(333, 327, 103, 93);
+		lblNeutral.setVisible(false);
+		contentPane.add(lblNeutral);
+		
 		JButton btnReset = new JButton("");
 		btnReset.addMouseListener(new MouseAdapter() {
 			@Override
@@ -247,6 +259,10 @@ public class MeSA_GUI extends JFrame {
 				
 				textFieldViewResult.setText("");
 				textFieldViewResult.setBackground(new Color(247, 164, 164));
+				
+				lblSuccess.setVisible(false);
+				lblNeutral.setVisible(false);
+				
 				textArea.setText(" ");
 			}
 		});
@@ -281,20 +297,149 @@ public class MeSA_GUI extends JFrame {
 		btnCheck.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				boolean input = false;
 				
 				if(InputTextField.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "It cannot be null! Please enter a sentence before searching.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+			
+					metaphorAnalyzer m = new metaphorAnalyzer(textArea);
+					boolean hasMetaphor = m.detectMetaphor(InputTextField.getText());
+					System.out.println("Metaphor? " + hasMetaphor);
 					
-					metaphorAnalyzer m = new metaphorAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
-					m.detectMetaphor(InputTextField.getText());
-					
-					simileAnalyzer s = new simileAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
-					s.detectSimile(InputTextField.getText());
-			        
-				    analogyAnalyzer a = new analogyAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
-				    a.detectAnalogy(InputTextField.getText());
+					simileAnalyzer s = new simileAnalyzer(textArea);
+				    boolean hasSimile = s.detectSimile(InputTextField.getText());
+				    System.out.println("Simile? " + hasSimile);
+				    
+				    analogyAnalyzer a = new analogyAnalyzer(textArea);
+				    boolean hasAnalogy = a.detectAnalogy(InputTextField.getText());
+				    System.out.println("Analogy? " + hasAnalogy);
+				    
+				    //detect metaphor
+				    if(hasMetaphor && !hasSimile && !hasAnalogy) {
+				    	textFieldViewResult.setText("Metaphor");
+		 	           	textFieldViewResult.setBackground(new Color(102, 204, 153));
+		 	           	
+		 	           	lblSuccess.setVisible(true);
+		 	           	 
+		 			    textFieldMetaphor.setText("100%");
+		 			    textFieldMetaphor.setBackground(new Color(102, 204, 153));
+		 			     
+		 			 	textFieldSimile.setText("0%");
+		 			 	textFieldSimile.setBackground(SystemColor.controlShadow);
+		 			 	
+		 			 	textFieldAnalogy.setText("0%");
+		 			 	textFieldAnalogy.setBackground(SystemColor.controlShadow);
+		 			 	
+		 			 	textArea.append("\n∴ Yeah! This sentence is detected as a metaphor.");
+		 			//detect simile
+				    } else if(hasMetaphor && hasSimile && !hasAnalogy) {
+				    	textFieldViewResult.setText("Simile");
+				    	textFieldViewResult.setBackground(new Color(102, 204, 153));
+	                	 
+				    	lblSuccess.setVisible(true);
+				    	
+	    			     textFieldMetaphor.setText("0%");
+	    			     textFieldMetaphor.setBackground(SystemColor.controlShadow);
+	    			     
+	    			 	 textFieldSimile.setText("100%");
+	    			 	 textFieldSimile.setBackground(new Color(102, 204, 153));
+	    			 	 
+	    			 	 textFieldAnalogy.setText("0%");
+	    			 	 textFieldAnalogy.setBackground(SystemColor.controlShadow);
+	    			 	 
+	    			 	textArea.append("\n∴ Yeah! This sentence is detected as a simile.");
+	    			//detect simile
+					} else if (!hasMetaphor && hasSimile && !hasAnalogy) {
+				    	textFieldViewResult.setText("Simile");
+				    	textFieldViewResult.setBackground(new Color(102, 204, 153));
+	                	 
+				    	lblSuccess.setVisible(true);
+				    	
+	    			     textFieldMetaphor.setText("0%");
+	    			     textFieldMetaphor.setBackground(Color.GRAY);
+	    			     
+	    			 	 textFieldSimile.setText("100%");
+	    			 	 textFieldSimile.setBackground(new Color(102, 204, 153));
+	    			 	 
+	    			 	 textFieldAnalogy.setText("0%");
+	    			 	 textFieldAnalogy.setBackground(Color.GRAY);
+	    			 	 
+	    			 	textArea.append("\n∴ Yeah! This sentence is detected as a simile.");
+	    			 	 
+	    			//detect analogy
+				    } else if(hasMetaphor && hasSimile && hasAnalogy) {
+				    	textFieldViewResult.setText("Analogy");
+				    	textFieldViewResult.setBackground(new Color(102, 204, 153));
+	                 	
+				    	lblSuccess.setVisible(true);
+				    	
+	        			textFieldMetaphor.setText("0%");
+	        			textFieldMetaphor.setBackground(SystemColor.controlShadow);
+	        			    
+	        			textFieldSimile.setText("0%");
+	        			textFieldSimile.setBackground(SystemColor.controlShadow);
+	        			 	
+	        			textFieldAnalogy.setText("100%");
+	        			textFieldAnalogy.setBackground(new Color(102, 204, 153));
+	        			
+	        			textArea.append("\n∴ Yeah! This sentence is detected as an analogy.");
+	        			
+	        		//detect analogy
+				    } else if(hasMetaphor && !hasSimile && hasAnalogy) {
+				    	textFieldViewResult.setText("Analogy");
+				    	textFieldViewResult.setBackground(new Color(102, 204, 153));
+	                 	
+				    	lblSuccess.setVisible(true);
+				    	
+	        			textFieldMetaphor.setText("0%");
+	        			textFieldMetaphor.setBackground(SystemColor.controlShadow);
+	        			    
+	        			textFieldSimile.setText("0%");
+	        			textFieldSimile.setBackground(SystemColor.controlShadow);
+	        			 	
+	        			textFieldAnalogy.setText("100%");
+	        			textFieldAnalogy.setBackground(new Color(102, 204, 153));
+	        			
+	        			textArea.append("\n∴ Yeah! This sentence is detected as an analogy.");
+	        			
+	        		//detect analogy
+				    } else if(!hasMetaphor && !hasSimile && hasAnalogy) {
+				    	textFieldViewResult.setText("Analogy");
+				    	textFieldViewResult.setBackground(new Color(102, 204, 153));
+	                 	
+				    	lblSuccess.setVisible(true);
+				    	
+	        			textFieldMetaphor.setText("0%");
+	        			textFieldMetaphor.setBackground(SystemColor.controlShadow);
+	        			    
+	        			textFieldSimile.setText("0%");
+	        			textFieldSimile.setBackground(SystemColor.controlShadow);
+	        			 	
+	        			textFieldAnalogy.setText("100%");
+	        			textFieldAnalogy.setBackground(new Color(102, 204, 153));
+	        		
+	        			textArea.append("\n∴ Hint: Yeah! This sentence is detected as an analogy.");
+	        			
+	        		//detect only normal sentence
+				    } else if(!hasMetaphor && !hasSimile && !hasAnalogy) {
+				    	textFieldViewResult.setText("Neutral");
+	 		   		 	textFieldViewResult.setBackground(SystemColor.controlShadow);
+	 		   		
+	 		   		 	lblNeutral.setVisible(true);
+	 		   		
+	 		   		 	textFieldMetaphor.setText("0%");
+	 		   		 	textFieldMetaphor.setBackground(SystemColor.controlShadow);
+	 		   		 	
+	 		   		 	textFieldSimile.setText("0%");
+	 		   		 	textFieldSimile.setBackground(SystemColor.controlShadow);
+	 		   		 	
+	 		   		 	textFieldAnalogy.setText("0%");
+	 		   		 	textFieldAnalogy.setBackground(SystemColor.controlShadow);
+	 		   		 	
+	 		   		 	textArea.append("\n∴ Hint: Oops! It is just a normal sentence...");
+				    }
 				}		
 			}	
 		});
@@ -303,15 +448,17 @@ public class MeSA_GUI extends JFrame {
 		btnCheck.setBounds(861, 98, 65, 59);
 		contentPane.add(btnCheck);
 		
+		JTextArea textArea_2 = new JTextArea();
+		textArea_2.setFont(new Font("Times New Roman", Font.PLAIN, 24));
+		textArea_2.setBounds(72, 276, 288, 41);
+		contentPane.add(textArea_2);
+		
+		
+		
 		JLabel lblbackground = new JLabel("");
 		lblbackground.setBackground(Color.WHITE);
 		lblbackground.setIcon(new ImageIcon(MeSA_GUI.class.getResource("/com/uum/ef936cc5bd6060c8cf9571f2d357c4f8.jpg")));
 		lblbackground.setBounds(0, 0, 1024, 757);
 		contentPane.add(lblbackground);
-		
-		JTextArea textArea_2 = new JTextArea();
-		textArea_2.setFont(new Font("Times New Roman", Font.PLAIN, 24));
-		textArea_2.setBounds(72, 276, 288, 41);
-		contentPane.add(textArea_2);
 	}
 }

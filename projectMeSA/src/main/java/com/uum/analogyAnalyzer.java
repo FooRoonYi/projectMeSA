@@ -24,24 +24,16 @@ public class analogyAnalyzer {
 	private static StanfordCoreNLP pipeline;
 	
 	static JTextArea textArea;
-	static JTextField textFieldMetaphor;
-	static JTextField textFieldSimile;
-	static JTextField textFieldAnalogy;
-	static JTextField textFieldViewResult;
 	
 	static List<CoreLabel> getWords(CoreMap sentence) {
         return sentence.get(CoreAnnotations.TokensAnnotation.class);
 	}
 	
-	public analogyAnalyzer(JTextArea aa, JTextField mm, JTextField ss, JTextField al, JTextField rr) {
+	public analogyAnalyzer(JTextArea aa) {
 		Properties props = new Properties();
 		props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
 		this.pipeline = new StanfordCoreNLP(props);
 		this.textArea = aa;
-		this.textFieldMetaphor = mm;
-		this.textFieldSimile = ss;
-		this.textFieldAnalogy = al;
-		this.textFieldViewResult = rr;
 	}
 	
 	public static boolean detectAnalogy(String text) {
@@ -59,44 +51,26 @@ public class analogyAnalyzer {
 	            
 	            if(words.size() > 10) {
 	            	if(foundAnalogy) {
-	            		printResult(foundAnalogy);
-	            		
-	            		textFieldViewResult.setText("Analogy");
-	                	textFieldViewResult.setBackground(new Color(102, 255, 255));
-	    			    textFieldMetaphor.setText("0%");
-	    			    textFieldMetaphor.setBackground(Color.WHITE);
-	    			    
-	    			 	textFieldSimile.setText("0%");
-	    			 	textFieldMetaphor.setBackground(Color.WHITE);
-	    			 	
-	    			 	textFieldAnalogy.setText("100%");
-	    			 	textFieldAnalogy.setBackground(Color.GREEN);
-	    			 	 
 		                return true;
-		            } else {
-		            	textFieldViewResult.setText("Neutral");
-	   		   		 	textFieldViewResult.setBackground(new Color(255, 255, 51));
-	   		   		 	textFieldMetaphor.setText("0%");
-	   		   		 	textFieldMetaphor.setBackground(Color.WHITE);
-	   		   		 	textFieldSimile.setText("0%");
-	   		   		 	textFieldSimile.setBackground(Color.WHITE);
-	   		   		 	textFieldAnalogy.setText("0%");
-	   		   		 	textFieldAnalogy.setBackground(Color.WHITE);
-	   		   		 	
-	   		   		 	return false;
-		            }
+		            } 
 	            }
+	            
+	            printResult(foundAnalogy);
 	        }
-	        return true;
+	        return false;
 	}
 	
 	static boolean findAnalogy(CoreMap sentence) {
+		
+		textArea.append("\nFor analogy part...\n" +
+				"---------------------------------------\n");
+		
 		//contain metaphor characteristics
-		metaphorAnalyzer metaphor = new metaphorAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
+		metaphorAnalyzer metaphor = new metaphorAnalyzer(textArea);
     	boolean foundMetaphor = metaphor.findMetaphor(sentence);
     	
     	//contain simile characteristics
-    	simileAnalyzer simile = new simileAnalyzer(textArea, textFieldMetaphor, textFieldSimile, textFieldAnalogy, textFieldViewResult);
+    	simileAnalyzer simile = new simileAnalyzer(textArea);
     	boolean foundSimile = simile.findSimile(sentence);
     	
     	//since the sentence has the characteristics of metaphor and simile
@@ -105,14 +79,17 @@ public class analogyAnalyzer {
     	if (foundMetaphor && foundSimile) {
     		return true;
     	}
+    	textArea.append("---------------------------------------\n"
+    			+ "Since there is no any metaphor or simile characteristics in this sentence, "
+    			+ "\nhence no analogy sentence is detected.\n");
     	return false;
 	}
 	
 	public static void printResult(boolean foundAnalogy) {
 	   	 if (foundAnalogy) {
-	             System.out.println("\nThe sentence contains an analogy.");
+	   		System.out.println("\nThe sentence contains an analogy.");
 	     } else {
-	             System.out.println("\nThe sentence does not contain an analogy.");
+	        System.out.println("\nThe sentence does not contain an analogy.");
 	    }
 	}
 	

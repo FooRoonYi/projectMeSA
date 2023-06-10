@@ -1,115 +1,79 @@
 package com.uum;
 
 import java.awt.Color;
+import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
 import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.ling.IndexedWord;
 import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.pipeline.CoreNLPProtos.IndexedWord;
 import edu.stanford.nlp.pipeline.StanfordCoreNLP;
 import edu.stanford.nlp.semgraph.SemanticGraph;
 import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
 import edu.stanford.nlp.semgraph.SemanticGraphEdge;
+import edu.stanford.nlp.trees.TypedDependency;
 import edu.stanford.nlp.util.CoreMap;
 
 public class metaphorAnalyzer {
-		private static StanfordCoreNLP pipeline;
-		
-		static JTextArea textArea;
-		static JTextField textFieldMetaphor;
-		static JTextField textFieldSimile;
-		static JTextField textFieldAnalogy;
-		static JTextField textFieldViewResult;
-		
-		static List<CoreLabel> getWords(CoreMap sentence) {
+	
+	 	private static StanfordCoreNLP pipeline;
+	    
+	    static JTextArea textArea;
+	 	
+	    static List<CoreLabel> getWords(CoreMap sentence) {
 	        return sentence.get(CoreAnnotations.TokensAnnotation.class);
 		}
-		
-		public metaphorAnalyzer(JTextArea aa, JTextField mm, JTextField ss, JTextField al, JTextField rr) {
-			Properties props = new Properties();
-	        /*
-	         * set a list of annotators for NLP pipeline using Stanford CoreNLP library
-	         * tokenize: segment the text into individual tokens or words
-	         * ssplit: split the text into sentences
-	         * pos: perform parts of speech tagging on each token
-	         * lemma: determine the base form or lemma of each word
-	         * ner: identify named entities such as people, organizations, and locations
-	         * parse: parse the sentence structure to identify grammatical relationships between words
-	         * dcoref: perform coference resolution which means identifying which words refer to the same entities in the text
-	         */
-	        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse,  dcoref");
-	        pipeline = new StanfordCoreNLP(props);
-			textArea = aa;
-			this.textFieldMetaphor = mm;
-    		this.textFieldSimile = ss;
-    		this.textFieldAnalogy = al;
-    		this.textFieldViewResult = rr;
-		}
-		
-		public static boolean detectMetaphor(String text) {
-			Annotation document = new Annotation(text);
-	        pipeline.annotate(document);
+	 	
+	    public metaphorAnalyzer(JTextArea aa) {
+	    		Properties props = new Properties();
+	    		props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
+	    		this.pipeline = new StanfordCoreNLP(props);
+	    		textArea = aa;
+	    }
+	    
+	    public static boolean detectMetaphor(String text) {
+	    		Annotation document = new Annotation(text);
+	        	pipeline.annotate(document);
 	        
-	        List<CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
-			
-	        for(CoreMap sentence : sentences) {
-	        	// Get the root of the dependency tree
-	        	SemanticGraph dependencies = sentence.get(SemanticGraphCoreAnnotations.CollapsedDependenciesAnnotation.class);
-
-	        	// Print the semantic graph
-	        	System.out.println("\nSemantic Graph:");
-	        	System.out.println(dependencies);
-	        	
-	        	//take a sentence, breaking down into individual tokens
-	        	//collect tokens as a list of strings
-	            List<CoreLabel> words = getWords(sentence);
-	            
-	            boolean foundMetaphor = findMetaphor(sentence);
-	            
-	            if (foundMetaphor) {
-	 	       		 printResult(foundMetaphor);
-	 	       		 
-	 	       		 textFieldViewResult.setText("Metaphor");
-	 	           	 textFieldViewResult.setBackground(new Color(102, 255, 255));
-	 	           	 
-	 			     textFieldMetaphor.setText("100%");
-	 			     textFieldMetaphor.setBackground(Color.GREEN);
-	 			     
-	 			 	 textFieldSimile.setText("0%");
-	 			 	 textFieldMetaphor.setBackground(Color.WHITE);
-	 			 	
-	 			 	 textFieldAnalogy.setText("0%");
-	 			 	 textFieldMetaphor.setBackground(Color.WHITE);
-	 			 	 
-	 			 	 return true;
-	            } else {
-	            	textFieldViewResult.setText("Neutral");
-   		   		 	textFieldViewResult.setBackground(new Color(255, 255, 51));
-   		   		 	textFieldMetaphor.setText("0%");
-   		   		 	textFieldMetaphor.setBackground(Color.WHITE);
-   		   		 	textFieldSimile.setText("0%");
-   		   		 	textFieldSimile.setBackground(Color.WHITE);
-   		   		 	textFieldAnalogy.setText("0%");
-   		   		 	textFieldAnalogy.setBackground(Color.WHITE);
-	 		   		 	
-	 		   		return false;
-	            }
-	        }
-	        return false;
-		}
-		
-		public static boolean findMetaphor(CoreMap sentence) {
+	        	List<CoreMap> sentences = document.get(SentencesAnnotation.class);
+	        
+	        	for (CoreMap sentence : sentences) {
+	        			SemanticGraph dependencies = sentence.get(SemanticGraphCoreAnnotations.CollapsedDependenciesAnnotation.class);
+	        			edu.stanford.nlp.ling.IndexedWord root = dependencies.getFirstRoot();
+	        			
+	        			System.out.println("\nSemantic Graph:");
+			            System.out.println(dependencies);
+			            List<CoreLabel> words = getWords(sentence);
+			            boolean foundMetaphor = findMetaphor(sentence);
+			            if(foundMetaphor) {
+			            	return true;
+			            }
+			            printResult(foundMetaphor);
+	        	}
+	        	return false;
+	    }
+	    
+	    public static boolean findMetaphor(CoreMap sentence) {
 			// Get the root of the dependency tree
 	    	SemanticGraph dependencies = sentence.get(SemanticGraphCoreAnnotations.CollapsedDependenciesAnnotation.class);
 	        
 	    	//take a sentence, breaking down into individual tokens
 	    	//collect tokens as a list of strings
 	    	List<CoreLabel> words = getWords(sentence);
+	    	
+	    	textArea.append("For metaphor part...\n"
+	    			+ "\n**(for your information...)\n"
+	    			+ "Noun - NN/NNS/NNP \t	 Pronoun - NNP/PRP\n "
+	    			+ "Verb - VB/VBZ/VBG/VBD/VBP/VBZ \n"
+	    			+ "Adjective - JJ \t Determinant (a/an/the)\n\n");
 	    	
 	    	// Check for verb-noun patterns
 	        if (hasMetaphoricalVerbNounPattern(dependencies)) {
@@ -155,7 +119,7 @@ public class metaphorAnalyzer {
 	    }
 		
 		private static boolean hasMetaphoricalVerbNounPattern(SemanticGraph dependencies) {
-	        for (IndexedWord vertex : dependencies.vertexSet()) {
+	        for (edu.stanford.nlp.ling.IndexedWord vertex : dependencies.vertexSet()) {
 	            String pos = vertex.get(CoreAnnotations.PartOfSpeechAnnotation.class);
 
 	            // Check for verb-noun pattern (VB + NN)
@@ -169,6 +133,9 @@ public class metaphorAnalyzer {
 	                        if (pos2.startsWith("NN")) {
 	                        	System.out.println("POS2: "+ pos2.toString());
 	                        	System.out.println("1");
+	                        	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                        			+ "1. " + pos.toString() + "\n" 
+	                        			+ "2. " + pos2.toString() + "\n");
 	                            return true;
 	                        }
 	                    }
@@ -179,7 +146,7 @@ public class metaphorAnalyzer {
 	    }
 		
 		private static boolean hasMetaphoricalNoun2Pattern(SemanticGraph dependencies) {
-	        for (IndexedWord vertex : dependencies.vertexSet()) {
+	        for (edu.stanford.nlp.ling.IndexedWord vertex : dependencies.vertexSet()) {
 	            String pos = vertex.get(CoreAnnotations.PartOfSpeechAnnotation.class);
 
 	            // Check for verb-noun pattern (NNP + NN)
@@ -195,6 +162,9 @@ public class metaphorAnalyzer {
 	                        if (pos2.startsWith("NN") || pos2.startsWith("NNS") || pos2.startsWith("PRP")) {
 	                        	System.out.println("POS2: "+ pos2.toString());
 	                        	System.out.println("2");
+	                        	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                        			+ "1. " + pos.toString() + "\n" 
+	                        			+ "2. " + pos2.toString() + "\n");
 	                            return true;
 	                        }
 	                    }
@@ -205,7 +175,7 @@ public class metaphorAnalyzer {
 	    }
 
 	    private static boolean hasMetaphoricalAdjectiveNounPattern(SemanticGraph dependencies) {
-	        for (IndexedWord vertex : dependencies.vertexSet()) {
+	        for (edu.stanford.nlp.ling.IndexedWord vertex : dependencies.vertexSet()) {
 	            String pos = vertex.get(CoreAnnotations.PartOfSpeechAnnotation.class);
 
 	            // Check for adjective-noun pattern (JJ + NN)
@@ -220,6 +190,9 @@ public class metaphorAnalyzer {
 	                        if (pos2.startsWith("NN")) {
 	                        	System.out.println("POS2: "+ pos2.toString());
 	                        	System.out.println("3");
+	                        	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                        			+ "1. " + pos.toString() + "\n" 
+	                        			+ "2. " + pos2.toString() + "\n");
 	                            return true;
 	                        }
 	                    }
@@ -230,7 +203,7 @@ public class metaphorAnalyzer {
 	    }
 	    
 	    private static boolean hasMetaphoricalNounVerbPattern(SemanticGraph dependencies) {
-	        for (IndexedWord vertex : dependencies.vertexSet()) {
+	        for (edu.stanford.nlp.ling.IndexedWord vertex : dependencies.vertexSet()) {
 	            String pos = vertex.get(CoreAnnotations.PartOfSpeechAnnotation.class);
 
 	            // Check for noun-verb pattern (PRP/NN + VB + NN)
@@ -245,6 +218,9 @@ public class metaphorAnalyzer {
 	                        if (pos2.startsWith("NNS") || pos2.startsWith("NN")) {
 	                        	System.out.println("POS2: "+ pos2.toString());
 	                        	System.out.println("4");
+	                        	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                        			+ "1. " + pos.toString() + "\n" 
+	                        			+ "2. " + pos2.toString() + "\n");
 	                            return true;
 	                        }
 	                    }
@@ -255,7 +231,7 @@ public class metaphorAnalyzer {
 	    }
 	    
 	    private static boolean hasMetaphoricalNounNounPattern(SemanticGraph dependencies) {
-	        for (IndexedWord vertex : dependencies.vertexSet()) {
+	        for (edu.stanford.nlp.ling.IndexedWord vertex : dependencies.vertexSet()) {
 	            String pos = vertex.get(CoreAnnotations.PartOfSpeechAnnotation.class);
 
 	            // Check for noun-verb pattern (PRP/NN + VB + NN)
@@ -269,6 +245,9 @@ public class metaphorAnalyzer {
 	                     if (pos2.startsWith("NNS")) {
 	                    	System.out.println("POS2: "+ pos2.toString());
 	                     	System.out.println("5");
+	                     	textArea.append("POS tag of keyword detected as metaphor: \n" 
+                        			+ "1. " + pos.toString() + "\n" 
+                        			+ "2. " + pos2.toString() + "\n");
 	                         return true;
 	                     }
 	                }
@@ -278,7 +257,7 @@ public class metaphorAnalyzer {
 	    }
 	    
 	    private static boolean hasMetaphoricalXisaYPattern(SemanticGraph dependencies) {
-	        for (IndexedWord vertex : dependencies.vertexSet()) {
+	        for (edu.stanford.nlp.ling.IndexedWord vertex : dependencies.vertexSet()) {
 	            String pos = vertex.get(CoreAnnotations.PartOfSpeechAnnotation.class);
 
 	            // Check for noun-verb pattern (PRP/NN + VB + NN)
@@ -294,6 +273,9 @@ public class metaphorAnalyzer {
 	                         if (pos2.startsWith("JJ")) {
 	                        	 System.out.println("POS2: "+ pos2.toString());
 	                         	System.out.println("6");
+	                         	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                        			+ "1. " + pos.toString() + "\n" 
+	                        			+ "2. " + pos2.toString() + "\n");
 	                             return true;
 	                         }
 	                	 }
@@ -304,7 +286,7 @@ public class metaphorAnalyzer {
 	    }
 	    
 	    private static boolean hasMetaphoricalVerbAdjectivePattern(SemanticGraph dependencies) {
-	        for (IndexedWord vertex : dependencies.vertexSet()) {
+	        for (edu.stanford.nlp.ling.IndexedWord vertex : dependencies.vertexSet()) {
 	            String pos = vertex.get(CoreAnnotations.PartOfSpeechAnnotation.class);
 
 	            // Check for noun-verb pattern (PRP/NN + VB + NN)
@@ -318,6 +300,9 @@ public class metaphorAnalyzer {
 	                	System.out.println(edge.getTarget().toString());
 	                    if (pos2.startsWith("PRP") || pos2.startsWith("VBP")) {
 	                    	System.out.println("7");
+	                    	textArea.append("POS tag of keyword detected as metaphor: \n" 
+                        			+ "1. " + pos.toString() + "\n" 
+                        			+ "2. " + pos2.toString() + "\n");
 	                        return true;
 	                    }
 	                }
@@ -327,25 +312,30 @@ public class metaphorAnalyzer {
 	    }
 	    
 	    private static boolean hasMetaphoricalSpecificCase(SemanticGraph dependencies) {
-	        for (IndexedWord vertex : dependencies.vertexSet()) {
+	        for (edu.stanford.nlp.ling.IndexedWord vertex : dependencies.vertexSet()) {
 	        	List<SemanticGraphEdge> outgoingEdges = dependencies.outgoingEdgeList(vertex);
 	            System.out.println(outgoingEdges);
 	            for (SemanticGraphEdge edge : outgoingEdges) {
 	            	System.out.println(edge.getTarget().toString());
 	                if (edge.getSource().tag().startsWith("VBN") && edge.getTarget().originalText().equals("heart")) {
 	                	System.out.println("8");
+	                	textArea.append("Key Point (grammar structure) of keyword detected as metaphor: \n" 
+                    			+ "1. " + edge.getSource().tag().toString() + "\n" 
+                    			+ "2. " + edge.getTarget().toString() + "\n");
 	                    return true;
 	                }
 	            }
 	        }
+	        textArea.append("No metaphorical sentence is detected.\n");
 	        return false;
 	    }
 	    
 	    public static void printResult(boolean foundMetaphor) {
-	      	 if (foundMetaphor) {
-	                System.out.println("\nThe sentence contains a metaphor.");
-	         } else {
-	                System.out.println("\nThe sentence does not contain a metaphor.");
-	         }
-	   	}
+	    	 if (foundMetaphor) {
+	              System.out.println("\nThe sentence contains a metaphor.");
+	            } else {
+	              System.out.println("\nThe sentence does not contain a metaphor.");
+	            }
+	    }
+		
 }

@@ -26,22 +26,14 @@ import javax.swing.JTextField;
 public class simileAnalyzer {
 	
 	private static StanfordCoreNLP pipeline;
- 	private static int numTruePositives = 0;
-    private static int numFalsePositives = 0;
-    private static int numTrueNegatives = 0;
-    private static int numFalseNegatives = 0;
     
 	static JTextArea textArea;
-	static JTextField textFieldMetaphor;
-	static JTextField textFieldSimile;
-	static JTextField textFieldAnalogy;
-	static JTextField textFieldViewResult;
 	
 	static List<CoreLabel> getWords(CoreMap sentence) {
 	        return sentence.get(CoreAnnotations.TokensAnnotation.class);
     }
 	
-	public simileAnalyzer(JTextArea aa, JTextField mm, JTextField ss, JTextField al, JTextField rr) {
+	public simileAnalyzer(JTextArea aa) {
 			Properties props = new Properties();
 	        /*
 	         * set a list of annotators for NLP pipeline using Stanford CoreNLP library
@@ -56,10 +48,6 @@ public class simileAnalyzer {
 	        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse,  dcoref");
 	        pipeline = new StanfordCoreNLP(props);
 			textArea = aa;
-			this.textFieldMetaphor = mm;
-    		this.textFieldSimile = ss;
-    		this.textFieldAnalogy = al;
-    		this.textFieldViewResult = rr;
 	}
 	
 	public static boolean detectSimile(String text) {
@@ -84,36 +72,13 @@ public class simileAnalyzer {
             
             if(words.size() <= 10) {
             	if (foundSimile) {
-            		 printResult(foundSimile);
-            		 
-            		 textFieldViewResult.setText("Simile");
-                	 textFieldViewResult.setBackground(new Color(102, 255, 255));
-                	 
-    			     textFieldMetaphor.setText("0%");
-    			     textFieldMetaphor.setBackground(Color.WHITE);
-    			     
-    			 	 textFieldSimile.setText("100%");
-    			 	 textFieldSimile.setBackground(Color.GREEN);
-    			 	 
-    			 	 textFieldAnalogy.setText("0%");
-    			 	 textFieldMetaphor.setBackground(Color.WHITE);
-    			 	 
     			 	return true;
-                } else {
-                	textFieldViewResult.setText("Neutral");
-   		   		 	textFieldViewResult.setBackground(new Color(255, 255, 51));
-   		   		 	textFieldMetaphor.setText("0%");
-   		   		 	textFieldMetaphor.setBackground(Color.WHITE);
-   		   		 	textFieldSimile.setText("0%");
-   		   		 	textFieldSimile.setBackground(Color.WHITE);
-   		   		 	textFieldAnalogy.setText("0%");
-   		   		 	textFieldAnalogy.setBackground(Color.WHITE);
-   		   		 	
-   		   		 	return false;
-                }
+                } 
             }
+            
+            printResult(foundSimile);
         }
-        return true;
+        return false;
     }
 	
 	public static boolean findSimile(CoreMap sentence) {
@@ -124,6 +89,8 @@ public class simileAnalyzer {
     	//collect tokens as a list of strings
     	List<CoreLabel> words = getWords(sentence);
     	
+    	textArea.append("\nFor simile part...\n");
+    	
     	//loops through a list of words
         for (int i = 0; i < words.size(); i++) {
             CoreLabel currentWord = words.get(i);
@@ -131,7 +98,7 @@ public class simileAnalyzer {
             
             // Check for simile patterns
             if (token.equalsIgnoreCase("like") || token.equalsIgnoreCase("as")) {
-            	textArea.append("\nKeyword detected: " + token +"\n\n");
+            	textArea.append("Keyword detected: " + token + "\n");
             	
             	if (i > 0 && i < words.size() - 1) {
                     CoreLabel prevToken = words.get(i - 1);
@@ -186,6 +153,7 @@ public class simileAnalyzer {
                 }
             }
         }
+        textArea.append("No simile sentence is detected.\n");
         return false;
     }
 	
