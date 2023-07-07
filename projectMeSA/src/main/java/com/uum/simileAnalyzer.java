@@ -27,7 +27,7 @@ public class simileAnalyzer {
 	
 	private static StanfordCoreNLP pipeline;
     
-	static JTextArea textArea;
+	static JTextArea textAreaSimile;
 	
 	static List<CoreLabel> getWords(CoreMap sentence) {
 	        return sentence.get(CoreAnnotations.TokensAnnotation.class);
@@ -47,7 +47,7 @@ public class simileAnalyzer {
 	         */
 	        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse,  dcoref");
 	        pipeline = new StanfordCoreNLP(props);
-			textArea = aa;
+	        textAreaSimile = aa;
 	}
 	
 	public static boolean detectSimile(String text) {
@@ -89,7 +89,7 @@ public class simileAnalyzer {
     	//collect tokens as a list of strings
     	List<CoreLabel> words = getWords(sentence);
     	
-    	textArea.append("\nFor simile part...\n");
+    	textAreaSimile.append("For simile part...\n");
     	
     	//loops through a list of words
         for (int i = 0; i < words.size(); i++) {
@@ -98,7 +98,7 @@ public class simileAnalyzer {
             
             // Check for simile patterns
             if (token.equalsIgnoreCase("like") || token.equalsIgnoreCase("as")) {
-            	textArea.append("Keyword detected: " + token + "\n");
+            	textAreaSimile.append("\nKeyword detected: " + token + "\n");
             	
             	if (i > 0 && i < words.size() - 1) {
                     CoreLabel prevToken = words.get(i - 1);
@@ -153,7 +153,7 @@ public class simileAnalyzer {
                 }
             }
         }
-        textArea.append("No simile sentence is detected.\n");
+        textAreaSimile.append("∴No simile sentence is detected.\n");
         return false;
     }
 	

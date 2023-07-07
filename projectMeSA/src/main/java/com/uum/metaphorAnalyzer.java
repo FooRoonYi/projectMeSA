@@ -26,7 +26,7 @@ public class metaphorAnalyzer {
 	
 	 	private static StanfordCoreNLP pipeline;
 	    
-	    static JTextArea textArea;
+	    static JTextArea textAreaMetaphor;
 	 	
 	    static List<CoreLabel> getWords(CoreMap sentence) {
 	        return sentence.get(CoreAnnotations.TokensAnnotation.class);
@@ -36,7 +36,7 @@ public class metaphorAnalyzer {
 	    		Properties props = new Properties();
 	    		props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
 	    		this.pipeline = new StanfordCoreNLP(props);
-	    		textArea = aa;
+	    		textAreaMetaphor = aa;
 	    }
 	    
 	    public static boolean detectMetaphor(String text) {
@@ -69,11 +69,12 @@ public class metaphorAnalyzer {
 	    	//collect tokens as a list of strings
 	    	List<CoreLabel> words = getWords(sentence);
 	    	
-	    	textArea.append("For metaphor part...\n"
+	    	textAreaMetaphor.append("For metaphor part...\n" 
 	    			+ "\n**(for your information...)\n"
-	    			+ "Noun - NN/NNS/NNP \t	 Pronoun - NNP/PRP\n "
+	    			+ "Noun - NN/NNS/NNP \n"
+	    			+ "Pronoun - NNP/PRP\n "
 	    			+ "Verb - VB/VBZ/VBG/VBD/VBP/VBZ \n"
-	    			+ "Adjective - JJ \t Determinant (a/an/the)\n\n");
+	    			+ "Adjective - JJ \nDeterminant (a/an/the)\n\n");
 	    	
 	    	// Check for verb-noun patterns
 	        if (hasMetaphoricalVerbNounPattern(dependencies)) {
@@ -133,7 +134,7 @@ public class metaphorAnalyzer {
 	                        if (pos2.startsWith("NN")) {
 	                        	System.out.println("POS2: "+ pos2.toString());
 	                        	System.out.println("1");
-	                        	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                        	textAreaMetaphor.append("POS tag of keyword detected as metaphor: \n" 
 	                        			+ "1. " + pos.toString() + "\n" 
 	                        			+ "2. " + pos2.toString() + "\n");
 	                            return true;
@@ -162,7 +163,7 @@ public class metaphorAnalyzer {
 	                        if (pos2.startsWith("NN") || pos2.startsWith("NNS") || pos2.startsWith("PRP")) {
 	                        	System.out.println("POS2: "+ pos2.toString());
 	                        	System.out.println("2");
-	                        	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                        	textAreaMetaphor.append("POS tag of keyword detected as metaphor: \n" 
 	                        			+ "1. " + pos.toString() + "\n" 
 	                        			+ "2. " + pos2.toString() + "\n");
 	                            return true;
@@ -190,7 +191,7 @@ public class metaphorAnalyzer {
 	                        if (pos2.startsWith("NN")) {
 	                        	System.out.println("POS2: "+ pos2.toString());
 	                        	System.out.println("3");
-	                        	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                        	textAreaMetaphor.append("POS tag of keyword detected as metaphor: \n" 
 	                        			+ "1. " + pos.toString() + "\n" 
 	                        			+ "2. " + pos2.toString() + "\n");
 	                            return true;
@@ -218,7 +219,7 @@ public class metaphorAnalyzer {
 	                        if (pos2.startsWith("NNS") || pos2.startsWith("NN")) {
 	                        	System.out.println("POS2: "+ pos2.toString());
 	                        	System.out.println("4");
-	                        	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                        	textAreaMetaphor.append("POS tag of keyword detected as metaphor: \n" 
 	                        			+ "1. " + pos.toString() + "\n" 
 	                        			+ "2. " + pos2.toString() + "\n");
 	                            return true;
@@ -245,7 +246,7 @@ public class metaphorAnalyzer {
 	                     if (pos2.startsWith("NNS")) {
 	                    	System.out.println("POS2: "+ pos2.toString());
 	                     	System.out.println("5");
-	                     	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                     	textAreaMetaphor.append("POS tag of keyword detected as metaphor: \n" 
                         			+ "1. " + pos.toString() + "\n" 
                         			+ "2. " + pos2.toString() + "\n");
 	                         return true;
@@ -273,7 +274,7 @@ public class metaphorAnalyzer {
 	                         if (pos2.startsWith("JJ")) {
 	                        	 System.out.println("POS2: "+ pos2.toString());
 	                         	System.out.println("6");
-	                         	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                         	textAreaMetaphor.append("POS tag of keyword detected as metaphor: \n" 
 	                        			+ "1. " + pos.toString() + "\n" 
 	                        			+ "2. " + pos2.toString() + "\n");
 	                             return true;
@@ -300,7 +301,7 @@ public class metaphorAnalyzer {
 	                	System.out.println(edge.getTarget().toString());
 	                    if (pos2.startsWith("PRP") || pos2.startsWith("VBP")) {
 	                    	System.out.println("7");
-	                    	textArea.append("POS tag of keyword detected as metaphor: \n" 
+	                    	textAreaMetaphor.append("POS tag of keyword detected as metaphor: \n" 
                         			+ "1. " + pos.toString() + "\n" 
                         			+ "2. " + pos2.toString() + "\n");
 	                        return true;
@@ -319,14 +320,14 @@ public class metaphorAnalyzer {
 	            	System.out.println(edge.getTarget().toString());
 	                if (edge.getSource().tag().startsWith("VBN") && edge.getTarget().originalText().equals("heart")) {
 	                	System.out.println("8");
-	                	textArea.append("Key Point (grammar structure) of keyword detected as metaphor: \n" 
+	                	textAreaMetaphor.append("Key Point (grammar structure) of keyword detected as metaphor: \n" 
                     			+ "1. " + edge.getSource().tag().toString() + "\n" 
                     			+ "2. " + edge.getTarget().toString() + "\n");
 	                    return true;
 	                }
 	            }
 	        }
-	        textArea.append("No metaphorical sentence is detected.\n");
+	        textAreaMetaphor.append("∴No metaphorical sentence is detected.\n");
 	        return false;
 	    }
 	    

@@ -78,20 +78,95 @@ public class MeSA_GUI extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panel_3 = new JPanel();
+		panel_3.setBorder(new LineBorder(new Color(0, 0, 0)));
 		panel_3.setBackground(Color.WHITE);
-		panel_3.setBounds(72, 462, 632, 247);
+		panel_3.setBounds(72, 462, 854, 247);
 		contentPane.add(panel_3);
 		panel_3.setLayout(null);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		scrollPane_1.setBounds(10, 10, 612, 227);
-		panel_3.add(scrollPane_1);
+		JPanel panel_10 = new JPanel();
+		panel_10.setBackground(new Color(255, 228, 225));
+		panel_10.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_10.setBounds(0, 0, 294, 49);
+		panel_3.add(panel_10);
+		panel_10.setLayout(null);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setFont(new Font("Times New Roman", Font.BOLD, 16));
-		textArea.setEditable(false);
-		textArea.setBackground(new Color(255, 240, 245));
-		scrollPane_1.setViewportView(textArea);
+		JLabel lblMetaphor_1 = new JLabel("Metaphor");
+		lblMetaphor_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblMetaphor_1.setForeground(Color.BLACK);
+		lblMetaphor_1.setFont(new Font("Times New Roman", Font.BOLD, 24));
+		lblMetaphor_1.setBounds(0, 0, 294, 49);
+		panel_10.add(lblMetaphor_1);
+		
+		JPanel panel_11 = new JPanel();
+		panel_11.setBackground(new Color(255, 255, 255));
+		panel_11.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_11.setBounds(0, 49, 294, 198);
+		panel_3.add(panel_11);
+		panel_11.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 10, 274, 178);
+		panel_11.add(scrollPane);
+		
+		JTextArea textAreaMetaphor = new JTextArea();
+		scrollPane.setViewportView(textAreaMetaphor);
+		
+		JPanel panel_11_1 = new JPanel();
+		panel_11_1.setLayout(null);
+		panel_11_1.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_11_1.setBackground(Color.WHITE);
+		panel_11_1.setBounds(293, 49, 275, 198);
+		panel_3.add(panel_11_1);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(10, 10, 255, 178);
+		panel_11_1.add(scrollPane_2);
+		
+		JTextArea textAreaSimile = new JTextArea();
+		scrollPane_2.setViewportView(textAreaSimile);
+		
+		JPanel panel_11_1_1 = new JPanel();
+		panel_11_1_1.setLayout(null);
+		panel_11_1_1.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_11_1_1.setBackground(Color.WHITE);
+		panel_11_1_1.setBounds(568, 49, 286, 198);
+		panel_3.add(panel_11_1_1);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(10, 10, 266, 178);
+		panel_11_1_1.add(scrollPane_1);
+		
+		JTextArea textAreaAnalogy = new JTextArea();
+		scrollPane_1.setViewportView(textAreaAnalogy);
+		
+		JPanel panel_10_1_1 = new JPanel();
+		panel_10_1_1.setBounds(568, 0, 286, 49);
+		panel_3.add(panel_10_1_1);
+		panel_10_1_1.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_10_1_1.setBackground(new Color(255, 228, 225));
+		panel_10_1_1.setLayout(null);
+		
+		JLabel lblAnalogy_1 = new JLabel("Analogy");
+		lblAnalogy_1.setBounds(0, 0, 286, 49);
+		panel_10_1_1.add(lblAnalogy_1);
+		lblAnalogy_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAnalogy_1.setForeground(Color.BLACK);
+		lblAnalogy_1.setFont(new Font("Times New Roman", Font.BOLD, 24));
+		
+		JPanel panel_10_1 = new JPanel();
+		panel_10_1.setBorder(new LineBorder(new Color(0, 0, 0)));
+		panel_10_1.setBackground(new Color(255, 228, 225));
+		panel_10_1.setBounds(293, 0, 275, 49);
+		panel_3.add(panel_10_1);
+		panel_10_1.setLayout(null);
+		
+		JLabel lblSimile_1 = new JLabel("Simile");
+		lblSimile_1.setBounds(0, 0, 269, 50);
+		panel_10_1.add(lblSimile_1);
+		lblSimile_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSimile_1.setForeground(Color.BLACK);
+		lblSimile_1.setFont(new Font("Times New Roman", Font.BOLD, 24));
 		
 		JLabel lblsentenceExamples = new JLabel("\"Something that you may want to know:");
 		lblsentenceExamples.setFont(new Font("Times New Roman", Font.BOLD, 22));
@@ -142,7 +217,7 @@ public class MeSA_GUI extends JFrame {
 		JPanel panel_7 = new JPanel();
 		panel_7.setBackground(Color.WHITE);
 		panel_7.setBorder(new LineBorder(new Color(0, 0, 0)));
-		panel_7.setBounds(0, 42, 291, 51);
+		panel_7.setBounds(0, 43, 291, 50);
 		panel_4.add(panel_7);
 		panel_7.setLayout(null);
 		
@@ -212,11 +287,11 @@ public class MeSA_GUI extends JFrame {
 		textFieldAnalogy.setColumns(10);
 		
 		JLabel lblAnalogy = new JLabel("Analogy");
+		lblAnalogy.setBounds(0, 0, 286, 44);
+		panel_6.add(lblAnalogy);
 		lblAnalogy.setForeground(Color.BLACK);
 		lblAnalogy.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAnalogy.setFont(new Font("Times New Roman", Font.BOLD, 24));
-		lblAnalogy.setBounds(0, 0, 286, 44);
-		panel_6.add(lblAnalogy);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBackground(new Color(255, 255, 255));
@@ -263,7 +338,9 @@ public class MeSA_GUI extends JFrame {
 				lblSuccess.setVisible(false);
 				lblNeutral.setVisible(false);
 				
-				textArea.setText(" ");
+				textAreaMetaphor.setText(" ");
+				textAreaSimile.setText(" ");
+				textAreaAnalogy.setText(" ");
 			}
 		});
 		btnReset.setBackground(Color.WHITE);
@@ -304,15 +381,15 @@ public class MeSA_GUI extends JFrame {
 				}
 				else {
 			
-					metaphorAnalyzer m = new metaphorAnalyzer(textArea);
+					metaphorAnalyzer m = new metaphorAnalyzer(textAreaMetaphor);
 					boolean hasMetaphor = m.detectMetaphor(InputTextField.getText());
 					System.out.println("Metaphor? " + hasMetaphor);
 					
-					simileAnalyzer s = new simileAnalyzer(textArea);
+					simileAnalyzer s = new simileAnalyzer(textAreaSimile);
 				    boolean hasSimile = s.detectSimile(InputTextField.getText());
 				    System.out.println("Simile? " + hasSimile);
 				    
-				    analogyAnalyzer a = new analogyAnalyzer(textArea);
+				    analogyAnalyzer a = new analogyAnalyzer(textAreaAnalogy);
 				    boolean hasAnalogy = a.detectAnalogy(InputTextField.getText());
 				    System.out.println("Analogy? " + hasAnalogy);
 				    
@@ -332,7 +409,7 @@ public class MeSA_GUI extends JFrame {
 		 			 	textFieldAnalogy.setText("0%");
 		 			 	textFieldAnalogy.setBackground(SystemColor.controlShadow);
 		 			 	
-		 			 	textArea.append("\n∴ Yeah! This sentence is detected as a metaphor.");
+		 			 	textAreaMetaphor.append("\n∴ Yeah! This sentence is detected as a metaphor.");
 		 			//detect simile
 				    } else if(hasMetaphor && hasSimile && !hasAnalogy) {
 				    	textFieldViewResult.setText("Simile");
@@ -349,7 +426,7 @@ public class MeSA_GUI extends JFrame {
 	    			 	 textFieldAnalogy.setText("0%");
 	    			 	 textFieldAnalogy.setBackground(SystemColor.controlShadow);
 	    			 	 
-	    			 	textArea.append("\n∴ Yeah! This sentence is detected as a simile.");
+	    			 	textAreaSimile.append("\n∴ Yeah! This sentence is detected as a simile.");
 	    			//detect simile
 					} else if (!hasMetaphor && hasSimile && !hasAnalogy) {
 				    	textFieldViewResult.setText("Simile");
@@ -366,7 +443,7 @@ public class MeSA_GUI extends JFrame {
 	    			 	 textFieldAnalogy.setText("0%");
 	    			 	 textFieldAnalogy.setBackground(Color.GRAY);
 	    			 	 
-	    			 	textArea.append("\n∴ Yeah! This sentence is detected as a simile.");
+	    			 	textAreaSimile.append("\n∴ Yeah! This sentence is detected as a simile.");
 	    			 	 
 	    			//detect analogy
 				    } else if(hasMetaphor && hasSimile && hasAnalogy) {
@@ -384,7 +461,7 @@ public class MeSA_GUI extends JFrame {
 	        			textFieldAnalogy.setText("100%");
 	        			textFieldAnalogy.setBackground(new Color(102, 204, 153));
 	        			
-	        			textArea.append("\n∴ Yeah! This sentence is detected as an analogy.");
+	        			textAreaAnalogy.append("\n∴ Yeah! This sentence is detected as an analogy.");
 	        			
 	        		//detect analogy
 				    } else if(hasMetaphor && !hasSimile && hasAnalogy) {
@@ -402,7 +479,7 @@ public class MeSA_GUI extends JFrame {
 	        			textFieldAnalogy.setText("100%");
 	        			textFieldAnalogy.setBackground(new Color(102, 204, 153));
 	        			
-	        			textArea.append("\n∴ Yeah! This sentence is detected as an analogy.");
+	        			textAreaAnalogy.append("\n∴ Yeah! This sentence is detected as an analogy.");
 	        			
 	        		//detect analogy
 				    } else if(!hasMetaphor && !hasSimile && hasAnalogy) {
@@ -420,7 +497,7 @@ public class MeSA_GUI extends JFrame {
 	        			textFieldAnalogy.setText("100%");
 	        			textFieldAnalogy.setBackground(new Color(102, 204, 153));
 	        		
-	        			textArea.append("\n∴ Hint: Yeah! This sentence is detected as an analogy.");
+	        			textAreaAnalogy.append("\n∴ Hint: Yeah! This sentence is detected as an analogy.");
 	        			
 	        		//detect only normal sentence
 				    } else if(!hasMetaphor && !hasSimile && !hasAnalogy) {
@@ -438,7 +515,9 @@ public class MeSA_GUI extends JFrame {
 	 		   		 	textFieldAnalogy.setText("0%");
 	 		   		 	textFieldAnalogy.setBackground(SystemColor.controlShadow);
 	 		   		 	
-	 		   		 	textArea.append("\n∴ Hint: Oops! It is just a normal sentence...");
+	 		   		 	textAreaMetaphor.append("\n∴ Hint: Oops! It is just a normal sentence...");
+	 		   		 	textAreaSimile.append("\n∴ Hint: Oops! It is just a normal sentence...");
+	 		   		 	textAreaAnalogy.append("\n∴ Hint: Oops! It is just a normal sentence...");
 				    }
 				}		
 			}	
@@ -457,8 +536,8 @@ public class MeSA_GUI extends JFrame {
 		
 		JLabel lblbackground = new JLabel("");
 		lblbackground.setBackground(Color.WHITE);
-		lblbackground.setIcon(new ImageIcon(MeSA_GUI.class.getResource("/com/uum/ef936cc5bd6060c8cf9571f2d357c4f8.jpg")));
-		lblbackground.setBounds(0, 0, 1024, 757);
+		lblbackground.setIcon(new ImageIcon(MeSA_GUI.class.getResource("/com/uum/111.jpg")));
+		lblbackground.setBounds(0, 0, 1014, 757);
 		contentPane.add(lblbackground);
 	}
 }

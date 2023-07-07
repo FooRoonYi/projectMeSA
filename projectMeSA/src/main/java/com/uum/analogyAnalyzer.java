@@ -62,7 +62,7 @@ public class analogyAnalyzer {
 	
 	static boolean findAnalogy(CoreMap sentence) {
 		
-		textArea.append("\nFor analogy part...\n" +
+		textArea.append("For analogy part...\n" +
 				"---------------------------------------\n");
 		
 		//contain metaphor characteristics
@@ -80,7 +80,7 @@ public class analogyAnalyzer {
     		return true;
     	}
     	textArea.append("---------------------------------------\n"
-    			+ "Since there is no any metaphor or simile characteristics in this sentence, "
+    			+ "∴Since there is no any metaphor or simile characteristics in this sentence, "
     			+ "\nhence no analogy sentence is detected.\n");
     	return false;
 	}
