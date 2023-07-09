@@ -110,6 +110,7 @@ public class MeSA_GUI extends JFrame {
 		panel_11.add(scrollPane);
 		
 		JTextArea textAreaMetaphor = new JTextArea();
+		textAreaMetaphor.setEditable(false);
 		scrollPane.setViewportView(textAreaMetaphor);
 		
 		JPanel panel_11_1 = new JPanel();
@@ -124,6 +125,7 @@ public class MeSA_GUI extends JFrame {
 		panel_11_1.add(scrollPane_2);
 		
 		JTextArea textAreaSimile = new JTextArea();
+		textAreaSimile.setEditable(false);
 		scrollPane_2.setViewportView(textAreaSimile);
 		
 		JPanel panel_11_1_1 = new JPanel();
@@ -138,6 +140,7 @@ public class MeSA_GUI extends JFrame {
 		panel_11_1_1.add(scrollPane_1);
 		
 		JTextArea textAreaAnalogy = new JTextArea();
+		textAreaAnalogy.setEditable(false);
 		scrollPane_1.setViewportView(textAreaAnalogy);
 		
 		JPanel panel_10_1_1 = new JPanel();
