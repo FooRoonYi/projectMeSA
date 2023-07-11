@@ -72,6 +72,7 @@ public class MeSA_GUI extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1028, 768);
 		contentPane = new JPanel();
+		contentPane.setBackground(new Color(255, 255, 255));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
@@ -151,6 +152,7 @@ public class MeSA_GUI extends JFrame {
 		panel_10_1_1.setLayout(null);
 		
 		JLabel lblAnalogy_1 = new JLabel("Analogy");
+		lblAnalogy_1.setBackground(new Color(255, 255, 255));
 		lblAnalogy_1.setBounds(0, 0, 286, 49);
 		panel_10_1_1.add(lblAnalogy_1);
 		lblAnalogy_1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -534,13 +536,5 @@ public class MeSA_GUI extends JFrame {
 		textArea_2.setFont(new Font("Times New Roman", Font.PLAIN, 24));
 		textArea_2.setBounds(72, 276, 288, 41);
 		contentPane.add(textArea_2);
-		
-		
-		
-		JLabel lblbackground = new JLabel("");
-		lblbackground.setBackground(Color.WHITE);
-		lblbackground.setIcon(new ImageIcon(MeSA_GUI.class.getResource("/com/uum/111.jpg")));
-		lblbackground.setBounds(0, 0, 1014, 757);
-		contentPane.add(lblbackground);
 	}
 }
